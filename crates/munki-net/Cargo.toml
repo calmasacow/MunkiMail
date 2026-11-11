@@ -1,0 +1,23 @@
+[package]
+name = "munki-net"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+munki-core = { workspace = true }
+munki-store = { path = "../munki-store" }
+anyhow = { workspace = true }
+serde_json = { workspace = true }
+async-imap = { version = "0.12.0", default-features = false, features = ["runtime-tokio"] }
+tokio = { version = "1.54.1", features = ["net", "rt", "macros", "time"] }
+tokio-rustls = { version = "0.26.6", default-features = false, features = ["ring", "tls12", "logging"] }
+webpki-roots = "1"
+futures = "0.3.34"
+mail-parser = "1.0.1"
+ammonia = "4.2.4"
+mail-builder = "2.0.1"
+mail-send = { version = "0.7.0", default-features = false, features = ["ring", "tls12"] }
+
+[dev-dependencies]
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros"] }

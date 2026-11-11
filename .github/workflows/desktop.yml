@@ -1,0 +1,99 @@
+name: Desktop checks and packages
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  desktop:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            bundles: deb,appimage
+          - os: macos-latest
+            bundles: app,dmg
+          - os: windows-latest
+            bundles: nsis
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libssl-dev libdbus-1-dev
+      - name: Windows assembler for vendored OpenSSL
+        if: runner.os == 'Windows'
+        uses: ilammy/setup-nasm@v1
+      - name: Windows Perl for vendored OpenSSL
+        if: runner.os == 'Windows'
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.40'
+          distribution: strawberry
+      - name: Install frontend dependencies
+        working-directory: apps/desktop
+        run: npm ci --no-audit --no-fund
+      - name: Frontend contract tests
+        working-directory: apps/desktop
+        run: npm test
+      - name: Frontend typecheck and production build
+        working-directory: apps/desktop
+        run: npm run build
+      - name: Install browser for UI smoke tests
+        if: runner.os == 'Linux'
+        working-directory: apps/desktop
+        run: npx playwright install --with-deps chromium
+      - name: Browser demo smoke tests
+        if: runner.os == 'Linux'
+        working-directory: apps/desktop
+        run: npm run test:ui
+      - name: Rust tests including SQLCipher
+        run: cargo test --workspace --locked
+      - name: Rust formatting
+        run: cargo fmt --all -- --check
+      - name: Rust lint
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: Native demo smoke check
+        run: cargo run --locked -p munkimail -- --self-check
+      - name: Package encrypted desktop
+        working-directory: apps/desktop
+        run: npm run tauri -- build --ci --no-sign --bundles ${{ matrix.bundles }} -- --locked
+      - name: Archive macOS app preserving permissions and symlinks
+        if: runner.os == 'macOS'
+        run: tar -czf target/release/bundle/macos/MunkiMail.app.tar.gz -C target/release/bundle/macos MunkiMail.app
+      - name: Upload native packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: MunkiMail-${{ matrix.os }}-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            target/release/bundle/deb/*.deb
+            target/release/bundle/appimage/*.AppImage
+            target/release/bundle/dmg/*.dmg
+            target/release/bundle/macos/*.app.tar.gz
+            target/release/bundle/nsis/*.exe

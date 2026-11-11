@@ -1,0 +1,20 @@
+[package]
+name = "munki-pim"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Local-first calendar and contacts storage with conditional DAV sync"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+rusqlite = "0.37.0"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
+quick-xml = "0.38"
+ical = "0.11"
+chrono = "0.4"
+chrono-tz = "0.10"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tempfile = "3.24.0"

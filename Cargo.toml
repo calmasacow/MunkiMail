@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = ["apps/gpui", "crates/munki-core", "crates/munki-store", "crates/munki-net", "apps/desktop/src-tauri", "crates/munki-ai", "crates/munki-pim", "crates/munki-auth", "crates/munki-jmap"]
+default-members = ["crates/munki-core", "crates/munki-store", "crates/munki-net"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+munki-core = { path = "crates/munki-core" }
+anyhow = "1.0.100"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"

@@ -1,0 +1,23 @@
+[package]
+name = "munki-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = ["bundled"]
+# Plain bundled SQLite. Fast to build, used for dev and tests.
+bundled = ["rusqlite/bundled"]
+# At-rest encryption via SQLCipher. Builds OpenSSL from source, so it is
+# opt-in: release builds turn it on, the inner dev loop does not.
+encryption = ["rusqlite/bundled-sqlcipher-vendored-openssl"]
+
+[dependencies]
+munki-core = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rusqlite = "0.37.0"
+
+[dev-dependencies]
+tempfile = "3.24.0"

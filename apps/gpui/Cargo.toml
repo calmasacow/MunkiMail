@@ -1,0 +1,43 @@
+[package]
+name = "munkimail-gpui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+ui-check = ["gpui/test-support"]
+
+[dependencies]
+munki-core = { path = "../../crates/munki-core" }
+munki-store = { path = "../../crates/munki-store", default-features = false, features = ["encryption"] }
+munki-net = { path = "../../crates/munki-net" }
+munki-pim = { path = "../../crates/munki-pim" }
+munki-auth = { path = "../../crates/munki-auth" }
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rusqlite = "0.37.0"
+mail-parser = "1.0.1"
+base64 = "0.22"
+url = "2"
+chrono = "0.4"
+
+ely-core = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "9efab23a1db2f54c327a150e6870db65e3a8adfd", features = ["runtime_shaders"] }
+ely-mail = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "9efab23a1db2f54c327a150e6870db65e3a8adfd" }
+ely-desktop = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "9efab23a1db2f54c327a150e6870db65e3a8adfd" }
+gpui = { package = "gpui-pre", version = "=0.3.11" }
+gpui_platform = { package = "gpui-pre-platform", version = "=0.3.11", features = ["font-kit", "wayland", "x11"] }
+jiff = "0.2"
+dirs = "6"
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "macros"] }
+munki-ai = { path = "../../crates/munki-ai" }
+munki-jmap = { path = "../../crates/munki-jmap" }
+mail-send = { version = "0.7.0", default-features = false, features = ["ring", "tls12"] }
+open = "5"
+notify-rust = "4"
+tempfile = "3"
+ely-calendar = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "9efab23a1db2f54c327a150e6870db65e3a8adfd" }
+html5ever = "0.40"
+markup5ever_rcdom = "0.40"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp"] }

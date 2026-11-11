@@ -1,0 +1,8 @@
+/target
+*.db
+*.db-journal
+*.db-wal
+node_modules
+/apps/desktop/dist
+/apps/desktop/test-results
+/apps/desktop/playwright-report

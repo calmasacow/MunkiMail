@@ -1,0 +1,32 @@
+[package]
+name = "munkimail"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+default-run = "munkimail"
+
+[dependencies]
+munki-core = { path = "../../../crates/munki-core" }
+munki-store = { path = "../../../crates/munki-store", default-features = false, features = ["encryption"] }
+munki-net = { path = "../../../crates/munki-net" }
+munki-ai = { path = "../../../crates/munki-ai" }
+munki-pim = { path = "../../../crates/munki-pim" }
+munki-auth = { path = "../../../crates/munki-auth" }
+munki-jmap = { path = "../../../crates/munki-jmap" }
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tauri = { version = "2.12.5", features = [] }
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "macros"] }
+rusqlite = "0.37.0"
+mail-parser = "1.0.1"
+mail-send = { version = "0.7.0", default-features = false, features = ["ring", "tls12"] }
+base64 = "0.22"
+url = "2"
+chrono = "0.4"
+tauri-plugin-single-instance = "2"
+tauri-plugin-notification = "2"
+open = "5"
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }

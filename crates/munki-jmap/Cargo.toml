@@ -1,0 +1,20 @@
+[package]
+name = "munki-jmap"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+munki-core = { path = "../munki-core" }
+munki-store = { path = "../munki-store" }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+rusqlite = "0.37"
+serde_json = "1"
+mail-parser = "1.0.1"
+mail-builder = "2.0.1"
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+url = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
